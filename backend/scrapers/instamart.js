@@ -24,7 +24,7 @@ async function swiggyScrape(query, location) {
   console.log('Setting geolocation:', latitude, longitude);
   await page.setGeolocation({ latitude, longitude });
 
-  try {
+    try {
     console.log('Navigating to Swiggy Instamart...');
     await page.goto('https://www.swiggy.com/instamart', { waitUntil: 'networkidle2' });
 
@@ -36,8 +36,21 @@ async function swiggyScrape(query, location) {
     console.warn('GPS button not found or clickable:', e.message);
   }
 
-  console.log('Waiting briefly for tooltip...');
-  await delay(500);
+// try {
+//   console.log('Navigating to Swiggy Instamart...');
+//   await page.goto('https://www.swiggy.com/instamart', { waitUntil: 'networkidle2' });
+
+//   console.log('Trying to click GPS button using evaluate...');
+//   await page.evaluate(() => {
+//     const gpsBtn = document.querySelector('[data-testid="set-gps-button"]');
+//     if (gpsBtn) gpsBtn.click();
+//   });
+// } catch (e) {
+//   console.warn('GPS button not found or clickable:', e.message);
+// }
+
+console.log('Waiting briefly for tooltip...');
+await delay(500);
 
   try {
     console.log('Waiting for re-check address tooltip...');

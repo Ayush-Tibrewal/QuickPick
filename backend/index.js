@@ -83,22 +83,42 @@ app.post("/search/zepto", async (req, res) => {
 
 app.post('/search/compare', async (req, res) => {
   const { query, pincode } = req.body;
-  const location = await fetchLocation(pincode);
 
   if (!query || !pincode) {
     return res.status(400).json({ error: 'Query and pincode required.' });
   }
 
-  if (!location.latitude) {
-    return res.status(400).json({ error: "Try searching with a more specific locality name" });
+  const location = await fetchLocation(pincode);
+
+  if (!location?.latitude) {
+    return res.status(400).json({ error: 'Try searching with a more specific locality name.' });
   }
 
   try {
-    const [blinkitData, zeptoData, swiggyData] = await Promise.all([
-      // scrapeBlinkit(query, pincode),             // Blinkit takes pin directly
-      // fetchZeptoPrices(query, pincode),          // Zepto takes pin directly
-      swiggyScrape(query, location)               // Instamart uses the pin as location text
-    ]);
+    let swiggyData = [];
+    try {
+      swiggyData = await swiggyScrape(query, location);
+    } catch (err) {
+      console.warn('Swiggy scrape failed:', err.message);
+    }
+
+    let zeptoData = [];
+    try {
+      zeptoData = await fetchZeptoPrices(query, pincode);
+    } catch (err) {
+      console.warn('Zepto scrape failed:', err.message);
+    }
+
+    let blinkitData = [];
+    try {
+      blinkitData = await scrapeBlinkit(query, pincode);
+    } catch (err) {
+      console.warn('Blinkit scrape failed:', err.message);
+    }
+
+    if (!swiggyData.length && !zeptoData.length && !blinkitData.length) {
+      return res.status(404).json({ error: 'No data found from any provider.' });
+    }
 
     const comparison = matchProducts(blinkitData, zeptoData, swiggyData);
     res.json(comparison);
@@ -107,6 +127,7 @@ app.post('/search/compare', async (req, res) => {
     res.status(500).json({ error: 'Comparison failed.' });
   }
 });
+
 
 
 const PORT = 3000;
