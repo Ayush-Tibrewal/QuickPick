@@ -1,9 +1,9 @@
 export default function ProductCard({ name, quantity,photo,zeptoQuantity,swiggyQuantity,blinkitQuantity, blinkit, zepto,swiggy }) {
-  const platformLogo = (src, url) => (
-    <a href={url} target="_blank" rel="noopener noreferrer">
-      <img src={src} alt="platform" className="h-6 w-auto hover:opacity-80" />
-    </a>
-  );
+  // const platformLogo = (src, url) => (
+  //   <a href={url} target="_blank" rel="noopener noreferrer">
+  //     <img src={src} alt="platform" className="h-6 w-auto hover:opacity-80" />
+  //   </a>
+  // );
 
   return (
     
