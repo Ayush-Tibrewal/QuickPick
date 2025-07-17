@@ -1,24 +1,26 @@
 const express = require('express');
 const cors = require('cors');
-const matchProducts = require('./utils/compareProducts');
-const scrapeBlinkit = require('./scrapers/blinkit'); 
-const fetchZeptoPrices = require('./scrapers/zepto');
-const swiggyScrape= require('./scrapers/instamart');
-const fetchLocation=require('./api')
+const serverless = require('serverless-http');
+
+const matchProducts = require('../utils/compareProducts');
+const scrapeBlinkit = require('../scrapers/blinkit'); 
+const fetchZeptoPrices = require('../scrapers/zepto');
+const swiggyScrape = require('../scrapers/instamart');
+const fetchLocation = require('../api'); // Make sure this is a FUNCTION!
 
 const app = express();
 app.use(cors());  
 app.use(express.json());
 
-app.post('/search/swiggy',async(req,res)=>{
-  const {query,pincode}=req.body;
-  const location=await fetchLocation(pincode)
+app.post('/search/swiggy', async (req, res) => {
+  const { query, pincode } = req.body;
+  const location = await fetchLocation(pincode);
 
   if (!query || !pincode) {
     return res.status(400).json({ error: 'Query and pincode required.' });
   }
-  if(!location.latitude){
-    return res.status(400).json({error:"Try searching with a more specific locality name "})
+  if (!location.latitude) {
+    return res.status(400).json({ error: "Try searching with a more specific locality name" });
   }
   try {
     const results = await swiggyScrape(query, location);
@@ -27,7 +29,7 @@ app.post('/search/swiggy',async(req,res)=>{
     console.error('Error scraping Swiggy:', error);
     res.status(500).json({ error: 'Failed to fetch data' });
   }
-})
+});
 
 app.post('/search/blinkit', async (req, res) => {
   const { query, pincode } = req.body;
@@ -44,20 +46,8 @@ app.post('/search/blinkit', async (req, res) => {
   }
 });
 
-// app.post('/search/zepto', async (req, res) => {
-//   const { query, pincode } = req.body;
-//   const location=await fetchLocation(pincode);
-//   if (!query || !pincode) {
-//     return res.status(400).json({ error: 'Query and pincode required.' });
-//   }
-//   if(!location.latitude){
-//     return res.status(400).json({error:"Try searching with a more specific locality name "})
-//   }
-//   const results = await fetchZeptoPrices(query, location);
-//   res.json(results);
-// });
 app.post("/search/zepto", async (req, res) => {
-  const { query , pincode} = req.body;
+  const { query, pincode } = req.body;
 
   if (!query) {
     return res.status(400).json({ error: "Query required." });
@@ -68,18 +58,11 @@ app.post("/search/zepto", async (req, res) => {
     const results = await fetchZeptoPrices(query, pincode);
     console.log("✅  Zepto returned", results.length, "products");
     res.json(results);
-
   } catch (err) {
-    // <— this will print the real underlying error
     console.error("💥 Zepto scrape threw:", err);
     res.status(500).json({ error: "Failed to fetch Zepto data.", details: err.message });
   }
 });
-
-
-
-
-
 
 app.post('/search/compare', async (req, res) => {
   const { query, pincode } = req.body;
@@ -128,7 +111,4 @@ app.post('/search/compare', async (req, res) => {
   }
 });
 
-
-
-const PORT = 3000;
-app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));
+module.exports = serverless(app);
