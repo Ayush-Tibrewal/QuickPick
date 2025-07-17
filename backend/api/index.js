@@ -6,7 +6,7 @@ const matchProducts = require('../utils/compareProducts');
 const scrapeBlinkit = require('../scrapers/blinkit'); 
 const fetchZeptoPrices = require('../scrapers/zepto');
 const swiggyScrape = require('../scrapers/instamart');
-const fetchLocation = require('../api'); // Make sure this is a FUNCTION!
+const fetchLocation = require('./location'); // Adjust the path as necessary
 
 const app = express();
 app.use(cors());  
