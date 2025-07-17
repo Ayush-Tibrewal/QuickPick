@@ -95,6 +95,7 @@ app.post('/search/compare', async (req, res) => {
   try {
     let swiggyData = [];
     try {
+      console.log("calling swiggy")
       swiggyData = await swiggyScrape(query, location);
     } catch (err) {
       console.warn('Swiggy scrape failed:', err.message);
@@ -102,6 +103,7 @@ app.post('/search/compare', async (req, res) => {
 
     let zeptoData = [];
     try {
+      console.log("calling zepto")
       zeptoData = await fetchZeptoPrices(query, pincode);
     } catch (err) {
       console.warn('Zepto scrape failed:', err.message);
@@ -109,6 +111,7 @@ app.post('/search/compare', async (req, res) => {
 
     let blinkitData = [];
     try {
+      console.log("calling blinkit")
       blinkitData = await scrapeBlinkit(query, pincode);
     } catch (err) {
       console.warn('Blinkit scrape failed:', err.message);
