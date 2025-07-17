@@ -1,28 +1,18 @@
-const dotenv=require('dotenv');
-const axios= require('axios');
+// api/location.js
+const axios = require('axios');
 
-dotenv.config();
+module.exports = async (req, res) => {
+  const { pincode } = req.query;
+  const encodedQuery = encodeURIComponent(`"${pincode}"`);
 
-async function encodeToUTF8(query) {
-  return encodeURIComponent(query);
-}
+  const apiKey = process.env.API;
+  if (!apiKey) {
+    return res.status(500).json({ error: "API key missing" });
+  }
 
-async function fetchLocation(pincode){
-  // 1. Encode the pincode for URL
-  const encodedQuery = await encodeToUTF8(`"${pincode}"`);
+  const response = await axios.get(`https://geocode.maps.co/search?q=${encodedQuery}&api_key=${apiKey}`);
+  const lat = Number(response.data[0]?.lat);
+  const lon = Number(response.data[0]?.lon);
 
-  // 2. Log the API key (for debugging - remove in production)
-  console.log("API Key:", process.env.API);
-  console.log(process.env); 
-  const res = await axios.get(`https://geocode.maps.co/search?q=${encodedQuery}&api_key=${process.env.API}`);
-
-  // 4. Extract coordinates
-  const latitude = Number(res.data[0]?.lat);
-  const longitude = Number(res.data[0]?.lon);
-
-  // 5. Return as object
-  return { latitude, longitude };
-}
-   
-
-module.exports=fetchLocation
+  res.status(200).json({ latitude: lat, longitude: lon });
+};
