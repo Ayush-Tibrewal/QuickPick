@@ -9,10 +9,22 @@ const swiggyScrape = require('../scrapers/instamart');
 const fetchLocation = require('./location'); // Adjust the path as necessary
 
 const app = express();
-app.use(cors());  
+
+// ✅ Middleware
+app.use(cors());
 app.use(express.json());
 
+// ✅ Handle CORS preflight
+app.options('*', (req, res) => {
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+  res.status(200).end();
+});
+
 app.post('/search/swiggy', async (req, res) => {
+  res.setHeader("Access-Control-Allow-Origin", "*");
+
   const { query, pincode } = req.body;
   const location = await fetchLocation(pincode);
 
@@ -32,6 +44,8 @@ app.post('/search/swiggy', async (req, res) => {
 });
 
 app.post('/search/blinkit', async (req, res) => {
+  res.setHeader("Access-Control-Allow-Origin", "*");
+
   const { query, pincode } = req.body;
   if (!query || !pincode) {
     return res.status(400).json({ error: 'Query and pincode required.' });
@@ -47,8 +61,9 @@ app.post('/search/blinkit', async (req, res) => {
 });
 
 app.post("/search/zepto", async (req, res) => {
-  const { query, pincode } = req.body;
+  res.setHeader("Access-Control-Allow-Origin", "*");
 
+  const { query, pincode } = req.body;
   if (!query) {
     return res.status(400).json({ error: "Query required." });
   }
@@ -65,14 +80,14 @@ app.post("/search/zepto", async (req, res) => {
 });
 
 app.post('/search/compare', async (req, res) => {
-  const { query, pincode } = req.body;
+  res.setHeader("Access-Control-Allow-Origin", "*");
 
+  const { query, pincode } = req.body;
   if (!query || !pincode) {
     return res.status(400).json({ error: 'Query and pincode required.' });
   }
 
   const location = await fetchLocation(pincode);
-
   if (!location?.latitude) {
     return res.status(400).json({ error: 'Try searching with a more specific locality name.' });
   }
