@@ -8,7 +8,7 @@ import {
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import HeroPage from "./pages/HeroPage";
 import Home from "./pages/Home";
-import { Navbar } from "./components/Navbar";   // ✅ use Navbar instead of Header
+import { Navbar } from "./components/navbar";   
 
 // 👇 must exactly match the VITE_ prefix
 const clerkPubKey = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY;
