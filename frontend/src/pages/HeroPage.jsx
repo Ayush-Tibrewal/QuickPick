@@ -29,12 +29,15 @@
 "use client"
 
 import { Button } from "@/components/ui/button"
+// ...existing code...
 import { Card, CardContent } from "@/components/ui/card"
 import { Play, MapPin, Search, Target, ArrowRight, Star, Zap, ShoppingCart } from "lucide-react"
 import { Link } from "react-router-dom"   // ✅ use React Router instead of next/link
 // import { Navbar } from "@/components/navbar"
 
 export default function HeroPage() {
+
+
   return (
     <div className="min-h-screen bg-black text-white">
       {/* <Navbar /> */}
@@ -54,13 +57,14 @@ export default function HeroPage() {
           {/* Demo Video */}
           <div className="relative max-w-4xl mx-auto mb-12">
             <div className="aspect-video bg-gray-900 rounded-2xl flex items-center justify-center shadow-2xl border border-gray-800">
-              <div className="text-center">
-                <div className="w-20 h-20 bg-blue-600 rounded-full flex items-center justify-center mb-4 mx-auto shadow-lg hover:bg-blue-700 transition-colors cursor-pointer">
-                  <Play className="w-8 h-8 text-white ml-1" />
-                </div>
-                <p className="text-gray-300 font-medium">Watch How Quick Pick Works</p>
-                <p className="text-gray-500 text-sm mt-2">2:30 min demo</p>
-              </div>
+              <video
+                src="/quickpick_demo.mp4"
+                controls
+                className="w-full h-full rounded-2xl"
+                poster="/Quick_pick_image.png"
+              >
+                Your browser does not support the video tag.
+              </video>
             </div>
           </div>
 
