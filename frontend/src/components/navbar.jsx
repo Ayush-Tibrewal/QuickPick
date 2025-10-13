@@ -56,15 +56,27 @@
 "use client"
 
 import { Button } from "@/components/ui/button"
+import React, { useState } from "react"
+// import { Toggle } from "@/components/ui/toggle"
 import { Package } from "lucide-react"
 import { Link, useLocation } from "react-router-dom"
-import { useClerk, useUser } from "@clerk/clerk-react"   // ✅ Clerk hooks
+
+// import { useClerk, useUser } from "@clerk/clerk-react"   // Clerk removed
+
 
 export function Navbar() {
   const location = useLocation()
   const pathname = location.pathname
-  const { openSignUp, signOut } = useClerk()
-  const { user } = useUser()
+  // Clerk removed
+  // const { openSignUp, signOut } = useClerk()
+  // const { user } = useUser()
+  const [showAuthMsg, setShowAuthMsg] = useState(false);
+  const handleAuthClick = () => {
+    setShowAuthMsg(true);
+    setTimeout(() => {
+      setShowAuthMsg(false);
+    }, 2000);
+  };
 
   return (
     <nav className="bg-gray-900/95 backdrop-blur-md border-b border-gray-800 sticky top-0 z-50">
@@ -102,21 +114,17 @@ export function Navbar() {
           </div>
 
           {/* Auth button */}
-          <div className="flex items-center space-x-3">
-            {user ? (
-              <Button
-                className="bg-red-600 hover:bg-red-700 text-white"
-                onClick={() => signOut()}
-              >
-                Sign Out
-              </Button>
-            ) : (
-              <Button
-                className="bg-blue-600 hover:bg-blue-700 text-white"
-                onClick={() => openSignUp()}
-              >
-                Sign Up
-              </Button>
+          <div className="flex items-center space-x-3 relative">
+            <Button
+              className="bg-blue-600 hover:bg-blue-700 text-white"
+              onClick={handleAuthClick}
+            >
+              Sign In
+            </Button>
+            {showAuthMsg && (
+              <div className="absolute top-12 right-0 bg-yellow-100 text-yellow-900 px-4 py-2 rounded shadow z-50 text-sm border border-yellow-300 animate-fade-in">
+                Auth is removed. You can access all features directly.
+              </div>
             )}
           </div>
         </div>

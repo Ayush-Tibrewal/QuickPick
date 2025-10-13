@@ -56,6 +56,9 @@ export default function HeroPage() {
 
           {/* Demo Video */}
           <div className="relative max-w-4xl mx-auto mb-12">
+            <div className="mb-2 text-center">
+              <span className="inline-block bg-blue-100 text-blue-800 text-sm font-semibold px-4 py-1 rounded-full">Demo Video</span>
+            </div>
             <div className="aspect-video bg-gray-900 rounded-2xl flex items-center justify-center shadow-2xl border border-gray-800">
               <video
                 src="/quickpick_demo.mp4"
